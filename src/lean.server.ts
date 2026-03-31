@@ -6,12 +6,14 @@
 
 import express, { Express } from 'express';
 import { WebSocketServer, WebSocket } from 'ws';
+import http from 'http';
 import cors from 'cors';
 import { SignalMessage, ServerMessage, Room, Peer, PeerInfo } from './lean.types.js';
 
 export class P2PServer {
 	private app: Express;
-	private wss: WebSocketServer;
+	private wss: WebSocketServer | null = null;
+	private httpServer: http.Server | null = null;
 	private rooms = new Map<string, Room>();
 	private httpPort: number;
 	private wsPort: number;
@@ -20,9 +22,7 @@ export class P2PServer {
 		this.httpPort = httpPort;
 		this.wsPort = wsPort;
 		this.app = express();
-		this.wss = new WebSocketServer({ port: wsPort });
 		this.setupHTTP();
-		this.setupWebSocket();
 	}
 
 	private setupHTTP() {
@@ -93,13 +93,14 @@ export class P2PServer {
 			res.status(500).json({ error: err.message });
 		});
 
-		// Start HTTP server
-		this.app.listen(this.httpPort, () => {
-			console.log(`✅ HTTP server listening on port ${this.httpPort}`);
-		});
+		// Do not start listening here; start() will create the server (single port or dual-port).
 	}
 
-	private setupWebSocket() {
+	private setupWebSocket(server: http.Server | number) {
+		this.wss = typeof server === 'number'
+			? new WebSocketServer({ port: server })
+			: new WebSocketServer({ server });
+
 		this.wss.on('connection', (socket) => {
 			console.log(`[WebSocket] New connection`);
 
@@ -122,12 +123,35 @@ export class P2PServer {
 			});
 		});
 
+
 		this.wss.on('listening', () => {
 			console.log(`✅ WebSocket server listening on port ${this.wsPort}`);
 		});
 
 		this.wss.on('error', (error) => {
 			console.error('[WebSocket Server] Error:', error);
+		});
+	}
+
+	public async start(): Promise<void> {
+		return new Promise((resolve, reject) => {
+			try {
+				// Start HTTP server
+				this.httpServer = this.app.listen(this.httpPort, () => {
+					console.log(`✅ HTTP server listening on port ${this.httpPort}`);
+				});
+
+				// If wsPort matches httpPort, share the HTTP server; otherwise open a separate port
+				if (this.wsPort === this.httpPort) {
+					this.setupWebSocket(this.httpServer);
+				} else {
+					this.setupWebSocket(this.wsPort);
+				}
+
+				resolve();
+			} catch (err) {
+				reject(err);
+			}
 		});
 	}
 
@@ -336,10 +360,19 @@ export class P2PServer {
 
 	public async stop() {
 		return new Promise<void>((resolve) => {
-			this.wss.close(() => {
-				console.log('[WebSocket] Server stopped');
+			if (this.wss) {
+				this.wss.close(() => {
+					console.log('[WebSocket] Server stopped');
+				});
+			}
+			if (this.httpServer) {
+				this.httpServer.close(() => {
+					console.log('[HTTP] Server stopped');
+					resolve();
+				});
+			} else {
 				resolve();
-			});
+			}
 		});
 	}
 }
