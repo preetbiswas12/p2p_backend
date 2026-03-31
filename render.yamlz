@@ -1,0 +1,36 @@
+$schema: "https://raw.githubusercontent.com/renderinc/render.yaml/main/schema/render.yaml.json"
+name: OctateCode P2P Backend
+services:
+  - type: web
+    name: octatecode-p2p-backend
+    runtime: node
+    region: oregon
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: SIGNALING_PORT
+        value: 3001
+      - key: CORS_ORIGINS
+        value: https://yourdomain.com
+      - key: ROOM_INACTIVITY_TIMEOUT
+        value: "10800000"
+      - key: PEER_HEARTBEAT_TIMEOUT
+        value: "300000"
+      - key: MEMORY_WARNING_THRESHOLD
+        value: "200"
+      - key: MEMORY_CRITICAL_THRESHOLD
+        value: "300"
+      - key: LOG_LEVEL
+        value: info
+
+  - type: cron
+    name: octatecode-p2p-keepalive
+    runtime: node
+    buildCommand: npm install
+    startCommand: node -e "setInterval(() => fetch('https://octatecode-p2p-backend.onrender.com/api/health').catch(console.error), 13 * 60 * 1000);"
+    schedule: "*/13 * * * *"

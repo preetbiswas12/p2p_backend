@@ -1,0 +1,41 @@
+{
+  "name": "octatecode-p2p-backend",
+  "version": "1.0.0",
+  "description": "Standalone P2P collaboration server for OctateCode",
+  "type": "module",
+  "main": "./build/lean.index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/lean.index.ts",
+    "start": "node build/lean.index.js",
+    "start:old": "node build/src/index.js",
+    "watch": "tsc --watch",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src/**/*.ts"
+  },
+  "keywords": [
+    "p2p",
+    "collaboration",
+    "webrtc",
+    "signaling"
+  ],
+  "author": "OctateCode",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.14.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.20",
+    "@types/node": "^20.8.0",
+    "@types/ws": "^8.5.8",
+    "typescript": "^5.2.2",
+    "tsx": "^4.6.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
