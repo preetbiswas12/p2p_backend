@@ -158,7 +158,7 @@ export function setupRoutes(router: Router): void {
 
 		try {
 			const token = authManager.generateToken(userId, roomId);
-			res.json({
+			return res.json({
 				status: 'success',
 				token,
 				userId,
@@ -168,7 +168,7 @@ export function setupRoutes(router: Router): void {
 				timestamp: Date.now(),
 			});
 		} catch (error) {
-			res.status(500).json({
+			return res.status(500).json({
 				error: 'Failed to generate token',
 				message: error instanceof Error ? error.message : 'Unknown error',
 				timestamp: Date.now(),
@@ -316,7 +316,7 @@ export function setupRoutes(router: Router): void {
 		}
 
 		try {
-			const metadata = roomManager.createRoom(room_id, room_name || room_id, host_id || 'unknown');
+			const metadata = roomManager.createRoom(room_id, room_name || room_id, host_id || 'unknown', 'Host');
 			return res.status(201).json({
 				message: 'Room created',
 				data: metadata,

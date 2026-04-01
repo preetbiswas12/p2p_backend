@@ -24,6 +24,6 @@
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node"
   },
-  "include": ["src/lean.*.ts", "src/globals.d.ts"],
-  "exclude": ["node_modules", "build", "dist", "src/index.ts", "src/p2pServer.ts", "src/signalingServer.ts", "src/roomManager.ts", "src/routes.ts", "src/logger.ts", "src/memoryManager.ts", "src/p2pTypes.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "build", "dist", "src/**/*.test.ts"]
 }

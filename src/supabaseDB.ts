@@ -4,8 +4,10 @@
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { logger } from './logger.js';
+import { getLogger } from './logger.js';
 import type { StoredOperation } from './operationHistoryManager.js';
+
+const logger = getLogger('[DB]');
 
 interface DatabaseTables {
 	auth_tokens: {

@@ -195,7 +195,6 @@ class RoomManager extends EventEmitter implements IRoomManager {
 			operations: {
 				total: 0,
 				perSecond: 0,
-				note: 'Operations now handled peer-to-peer via WebRTC data channels',
 			},
 		};
 	}
@@ -211,7 +210,6 @@ class RoomManager extends EventEmitter implements IRoomManager {
 			bandwidth: {
 				sent: 0,
 				received: 0,
-				note: 'Bandwidth tracked peer-to-peer via WebRTC',
 			},
 			createdAt: room.createdAt,
 			lastActivity: room.lastActivity,
