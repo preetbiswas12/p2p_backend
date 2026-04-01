@@ -8,13 +8,13 @@ import { roomManager } from './roomManager.js';
 class MemoryManager {
 	private monitorInterval: NodeJS.Timeout | null = null;
 	private lastWarningTime = 0;
-	private readonly MONITOR_INTERVAL = 30 * 1000; // 30 seconds
-	private readonly WARNING_THRESHOLD = parseInt(process.env.MEMORY_WARNING_THRESHOLD || '200', 10); // MB
-	private readonly CRITICAL_THRESHOLD = parseInt(process.env.MEMORY_CRITICAL_THRESHOLD || '250', 10); // MB
-	private readonly WARNING_COOLDOWN = 60 * 1000; // 60 seconds
+	private readonly MONITOR_INTERVAL = 15 * 1000; // 15 seconds - aggressive monitoring
+	private readonly WARNING_THRESHOLD = parseInt(process.env.MEMORY_WARNING_THRESHOLD || '150', 10); // MB - lower threshold
+	private readonly CRITICAL_THRESHOLD = parseInt(process.env.MEMORY_CRITICAL_THRESHOLD || '200', 10); // MB - lower threshold
+	private readonly WARNING_COOLDOWN = 30 * 1000; // 30 seconds - more frequent cleanups
 
 	public start(): void {
-		console.log('[MemoryManager] Started (every 30000ms)');
+		console.log('[MemoryManager] Started (every 15000ms - aggressive monitoring)');
 
 		this.monitorInterval = setInterval(() => {
 			this.monitor();

@@ -23,7 +23,7 @@ class RoomManager extends EventEmitter implements IRoomManager {
 	// Configuration (in milliseconds) - read from environment
 	private readonly ROOM_INACTIVITY_TIMEOUT = parseInt(process.env.ROOM_INACTIVITY_TIMEOUT || '10800000', 10); // 3 hours default
 	private readonly PEER_HEARTBEAT_TIMEOUT = parseInt(process.env.PEER_HEARTBEAT_TIMEOUT || '300000', 10); // 5 minutes default
-	private readonly CLEANUP_CHECK_INTERVAL = parseInt(process.env.CLEANUP_CHECK_INTERVAL || '60000', 10); // 60 seconds default
+	private readonly CLEANUP_CHECK_INTERVAL = parseInt(process.env.CLEANUP_CHECK_INTERVAL || '20000', 10); // 20 seconds - aggressive cleanup
 
 	constructor() {
 		super();

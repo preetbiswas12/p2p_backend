@@ -16,14 +16,16 @@ services:
         value: 3001
       - key: CORS_ORIGINS
         value: https://p2p-backend-q6s7.onrender.com,http://localhost:3000,http://localhost:8080
+      - key: CLEANUP_CHECK_INTERVAL
+        value: "20000"
       - key: ROOM_INACTIVITY_TIMEOUT
         value: "10800000"
       - key: PEER_HEARTBEAT_TIMEOUT
         value: "300000"
       - key: MEMORY_WARNING_THRESHOLD
-        value: "200"
+        value: "150"
       - key: MEMORY_CRITICAL_THRESHOLD
-        value: "300"
+        value: "200"
       - key: LOG_LEVEL
         value: info
       - key: RATE_LIMIT_WINDOW_MS
