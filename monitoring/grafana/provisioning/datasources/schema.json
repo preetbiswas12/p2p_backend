@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Grafana Datasource Provisioning",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "type": ["number", "string"],
+      "description": "Provisioning schema version"
+    },
+    "datasources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "access": { "type": "string" },
+          "url": { "type": "string" },
+          "isDefault": { "type": "boolean" },
+          "editable": { "type": "boolean" },
+          "jsonData": { "type": "object" }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

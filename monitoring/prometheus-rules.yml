@@ -1,0 +1,84 @@
+groups:
+  - name: octatecode_backend
+    interval: 15s
+    rules:
+      # High memory usage
+      - alert: HighMemoryUsage
+        expr: |
+          (
+            process_resident_memory_bytes{job="octatecode-backend"} / 1024 / 1024
+          ) > 300
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Backend memory usage is above 300MB (current: {{ $value }}MB)"
+
+      # Critical memory usage
+      - alert: CriticalMemoryUsage
+        expr: |
+          (
+            process_resident_memory_bytes{job="octatecode-backend"} / 1024 / 1024
+          ) > 400
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "CRITICAL memory usage on {{ $labels.instance }}"
+          description: "Backend memory usage is above 400MB (current: {{ $value }}MB)"
+
+      # High error rate
+      - alert: HighErrorRate
+        expr: |
+          rate(http_requests_total{job="octatecode-backend",status=~"5.."}[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate on {{ $labels.instance }}"
+          description: "Error rate is above 5% for the last 5 minutes"
+
+      # Service down
+      - alert: ServiceDown
+        expr: |
+          up{job="octatecode-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service is down on {{ $labels.instance }}"
+          description: "Backend service has been unreachable for 1 minute"
+
+      # High response time
+      - alert: HighResponseTime
+        expr: |
+          histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="octatecode-backend"}[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High response time on {{ $labels.instance }}"
+          description: "95th percentile response time is above 1 second"
+
+      # High rate limiting
+      - alert: HighRateLimitingActivations
+        expr: |
+          rate(http_requests_total{job="octatecode-backend",status="429"}[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High rate limiting activations on {{ $labels.instance }}"
+          description: "Rate limiter is blocking requests frequently"
+
+      # WebSocket connection failures
+      - alert: WebSocketConnectionFailures
+        expr: |
+          rate(websocket_connection_errors_total{job="octatecode-backend"}[5m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "WebSocket connection failures on {{ $labels.instance }}"
+          description: "WebSocket connections are failing at high rate"
