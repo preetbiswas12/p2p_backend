@@ -29,7 +29,7 @@ export class P2PServer {
 		// Configure CORS from environment
 		const corsOrigins = process.env.CORS_ORIGINS
 			? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
-			: ['http://localhost:3000', 'http://localhost:8080'];
+			: ['https://p2p-backend-q6s7.onrender.com'];
 
 		app.use(cors({
 			origin: corsOrigins,
